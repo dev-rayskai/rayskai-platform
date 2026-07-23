@@ -1,0 +1,5 @@
+import Link from "next/link";
+import {PageHero,SiteShell} from "@/components/site-shell";
+import {articles} from "@/lib/articles";
+
+export default function Blog(){return <SiteShell><PageHero eyebrow="RAYSKAI JOURNAL" title="Ideas for every conversation that matters." copy="Practical playbooks for teams that want to respond faster and turn more demand into growth."/><section className="mx-auto grid max-w-7xl gap-5 px-6 pb-28 lg:grid-cols-3">{articles.map(article=><article className="glass flex min-h-72 flex-col rounded-3xl p-7" key={article.slug}><p className="text-sm font-semibold text-emerald-100">{article.category}</p><h2 className="mt-6 text-xl font-semibold tracking-[-.03em]">{article.title}</h2><p className="mt-4 text-sm leading-6 text-slate-400">{article.description}</p><div className="mt-auto flex items-center justify-between pt-8 text-sm"><span className="text-slate-500">{article.readTime}</span><Link href={`/blog/${article.slug}`} className="font-semibold text-emerald-100">Read article →</Link></div></article>)}</section></SiteShell>}

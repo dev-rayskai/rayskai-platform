@@ -1,25 +1,257 @@
 import Link from "next/link";
-import {ArrowRight,CalendarCheck,LineChart,MessageSquareMore,Phone,ShieldCheck} from "lucide-react";
-import {Hero} from "@/components/hero";
-import {Navbar} from "@/components/navbar";
-import {RoiCalculator} from "@/components/roi-calculator";
-import {VoiceDemo} from "@/components/voice-demo";
+import { ArrowRight, Flower2, Hospital, Stethoscope } from "lucide-react";
+import { Counter } from "@/components/animated-counter";
+import { Tooth, ToothBraces } from "@/components/dental-icons";
+import { FaqAccordion } from "@/components/faq-accordion";
+import { Hero } from "@/components/hero";
+import { Navbar } from "@/components/navbar";
+import { PlatformCarousel } from "@/components/platform-carousel";
+import { PlatformGrid } from "@/components/platform-grid";
+import { RevenueDashboard } from "@/components/revenue-dashboard";
+import { RoiCalculator } from "@/components/roi-calculator";
+import { RolloutSteps } from "@/components/rollout-steps";
+import { SectionDots } from "@/components/section-dots";
+import { TrustMarquee } from "@/components/trust-marquee";
+import { VoiceDemo } from "@/components/voice-demo";
 
-const features=[[Phone,"AI Receptionist","Answers every inbound patient call, handles FAQs, and creates a confident first impression."],[CalendarCheck,"AI Scheduler","Finds the right appointment, fills cancellations, and confirms every booking."],[MessageSquareMore,"AI Recall Coordinator","Reactivates overdue patients and keeps recall campaigns moving across voice and SMS."],[LineChart,"AI Revenue Analyst","Connects activity to recovered appointments, collections, and production in one view."],[ShieldCheck,"AI Treatment Coordinator","Follows up on unaccepted treatment with useful education and a clear next step."],[MessageSquareMore,"AI Collections Specialist","Recovers aging balances with friendly reminders, payment links, and plan setup."],[ShieldCheck,"AI Insurance Verifier","Reduces eligibility friction before the patient arrives."],[LineChart,"AI Marketing Coordinator","Turns referrals, reviews, and reactivation into repeatable growth campaigns."]];
-const industries=[["Dental","Recall, treatment acceptance, collections","/solutions/dental"],["Med Spa","Consultations, treatment follow-up, rebooking","/solutions/med-spa"],["Orthodontics","Lead qualification, consults, accepted treatment","/solutions/orthodontics"],["Primary Care","Intake, access, routing, and recall","/solutions/primary-care"],["Specialty Clinics","Referrals, care coordination, complex scheduling","/solutions/specialty-clinics"]];
-const faqs=[["Does RayskAI replace our front desk?","No. RayskAI handles repeatable conversations and escalates nuanced moments to your team with the relevant context."],["How quickly can we go live?","Most teams start with a focused workflow and go live in about 14 days, without replacing their phone system."],["Can it work with our existing tools?","Yes. We design the integration around your phone, calendar, practice-management, CRM, and payment workflow."],["Is RayskAI appropriate for healthcare teams?","RayskAI supports healthcare-oriented workflows and can be configured around your privacy, escalation, and access requirements."]];
+const industries = [
+  [
+    Tooth,
+    "Dental",
+    "Recall, treatment acceptance, collections",
+    "/solutions/dental",
+  ],
+  [
+    Flower2,
+    "Med Spa",
+    "Consultations, treatment follow-up, rebooking",
+    "/solutions/med-spa",
+  ],
+  [
+    ToothBraces,
+    "Orthodontics",
+    "Lead qualification, consults, accepted treatment",
+    "/solutions/orthodontics",
+  ],
+  [
+    Stethoscope,
+    "Primary Care",
+    "Intake, access, routing, and recall",
+    "/solutions/primary-care",
+  ],
+  [
+    Hospital,
+    "Specialty Clinics",
+    "Referrals, care coordination, complex scheduling",
+    "/solutions/specialty-clinics",
+  ],
+];
 
-export default function Home(){return <main><Navbar/><Hero/>
-  <section className="border-y border-white/10 bg-white/[.02] py-8"><div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-5 px-6 text-xs font-semibold uppercase tracking-[.16em] text-slate-500"><span>Trusted workflows for leading practice operations</span><span>Dental</span><span>Med Spa</span><span>Orthodontics</span><span>Primary Care</span><span>Specialty Clinics</span></div></section>
-  <section className="mx-auto max-w-7xl px-6 py-24"><div className="grid gap-4 rounded-3xl border border-white/10 bg-white/[.03] p-6 text-center sm:grid-cols-3 sm:p-9"><div><p className="text-4xl font-semibold text-emerald-100">92%</p><p className="mt-2 text-sm text-slate-400">Retention after 6 months</p></div><div className="border-y border-white/10 py-6 sm:border-x sm:border-y-0 sm:py-0"><p className="text-4xl font-semibold text-emerald-100">28%</p><p className="mt-2 text-sm text-slate-400">More appointments recovered</p></div><div><p className="text-4xl font-semibold text-emerald-100">7×</p><p className="mt-2 text-sm text-slate-400">Average ROI</p></div></div></section>
-  <VoiceDemo/>
-  <RoiCalculator/>
-  <section id="platform" className="mx-auto max-w-7xl px-6 py-28"><p className="eyebrow">THE RAYSKAI PLATFORM</p><h2 className="section-title mt-5 max-w-2xl">A better front door for your entire business.</h2><div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{features.map(([Icon,title,copy])=><article key={title as string} className="glass rounded-2xl p-6"><Icon className="text-emerald-100"/><h3 className="mt-7 text-lg font-semibold">{title as string}</h3><p className="mt-3 leading-7 text-slate-400">{copy as string}</p></article>)}</div></section>
-  <section className="mx-auto max-w-7xl px-6 py-24"><div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]"><div><p className="eyebrow">GO LIVE IN 14 DAYS</p><h2 className="section-title mt-5">A clear path from first call to measurable growth.</h2><p className="mt-6 leading-8 text-slate-400">No hardware, phone replacement, or drawn-out rollout. Begin with the work that has the clearest revenue impact.</p></div><ol className="space-y-4">{[["Connect","Connect your phone system, calendar, and the systems your team already trusts."],["Train","RayskAI learns your policies, scripts, FAQs, and escalation preferences."],["Launch","Go live with AI voice and SMS automation while your team keeps visibility."],["Scale","Track recovered revenue, then add workflows and locations as results compound."]].map(([step,copy],index)=><li className="glass flex gap-5 rounded-2xl p-6" key={step}><span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-emerald-200 font-bold text-[#07111f]">{index+1}</span><div><h3 className="font-semibold">{step}</h3><p className="mt-2 text-sm leading-6 text-slate-400">{copy}</p></div></li>)}</ol></div></section>
-  <section className="mx-auto max-w-7xl px-6 py-24"><div className="flex flex-wrap items-end justify-between gap-6"><div><p className="eyebrow">BUILT FOR YOUR PRACTICE</p><h2 className="section-title mt-5">One AI revenue team. Every patient moment.</h2></div><Link href="/solutions/dental" className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-100">Explore solutions <ArrowRight size={16}/></Link></div><div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">{industries.map(([name,copy,href])=><Link href={href} key={name} className="group rounded-2xl border border-white/10 bg-white/[.03] p-6 transition hover:-translate-y-1 hover:border-emerald-100/40"><p className="text-lg font-semibold">{name}</p><p className="mt-3 text-sm leading-6 text-slate-400">{copy}</p><span className="mt-8 inline-flex text-emerald-100 transition group-hover:translate-x-1">→</span></Link>)}</div></section>
-  <section className="mx-auto max-w-7xl px-6 py-24"><div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[.07] to-transparent p-8 sm:p-12"><p className="eyebrow">CUSTOMER OUTCOME</p><blockquote className="mt-7 max-w-4xl text-3xl font-semibold leading-tight tracking-[-.045em] sm:text-5xl">“We stopped thinking of RayskAI as software and started thinking of it as an additional revenue coordinator.”</blockquote><div className="mt-10 flex flex-wrap items-end justify-between gap-6"><div><p className="font-semibold">Ontario dental practice</p><p className="mt-1 text-sm text-slate-400">Four providers · 45-day pilot</p></div><p className="text-4xl font-semibold text-emerald-100">+$43,280 <span className="block text-sm font-normal text-slate-400">recovered revenue</span></p></div></div></section>
-  <section className="mx-auto max-w-7xl px-6 py-24"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="eyebrow">SIMPLE, OUTCOME-ALIGNED PRICING</p><h2 className="section-title mt-5">Start focused. Grow with results.</h2></div><Link href="/pricing" className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold">View all pricing</Link></div><div className="mt-12 grid gap-4 md:grid-cols-2"><article className="glass rounded-3xl p-7"><p className="font-semibold">Revenue Recovery</p><p className="mt-5 text-4xl font-semibold text-emerald-100">$997<span className="text-base font-normal text-slate-400">/month</span></p><p className="mt-5 text-sm leading-6 text-slate-400">Missed-call recovery, SMS campaigns, intake forms, online booking, and a real-time dashboard.</p><Link href="/pricing" className="mt-7 inline-flex text-sm font-semibold text-emerald-100">Explore plan →</Link></article><article className="rounded-3xl bg-emerald-200 p-7 text-[#07111f]"><p className="font-semibold">Revenue Growth</p><p className="mt-5 text-4xl font-semibold">$1,997<span className="text-base font-normal opacity-70">/month</span></p><p className="mt-5 text-sm leading-6 opacity-80">Treatment follow-up, collections, insurance verification, marketing automation, and advanced analytics.</p><Link href="/pricing" className="mt-7 inline-flex text-sm font-semibold">Explore plan →</Link></article></div></section>
-  <section className="mx-auto max-w-4xl px-6 py-24"><p className="eyebrow">FAQ</p><h2 className="section-title mt-5">Questions, answered.</h2><div className="mt-10 divide-y divide-white/10 rounded-3xl border border-white/10 px-6">{faqs.map(([question,answer])=><details key={question} className="group py-5"><summary className="cursor-pointer list-none font-semibold"><span className="flex items-center justify-between gap-4">{question}<span className="text-emerald-100 group-open:rotate-45">+</span></span></summary><p className="max-w-2xl pt-4 leading-7 text-slate-400">{answer}</p></details>)}</div></section>
-  <section className="mx-auto max-w-7xl px-6 py-16"><div className="rounded-3xl bg-emerald-200 p-8 text-[#07111f] sm:p-14"><p className="font-semibold uppercase tracking-[.14em]">LIMITED PILOT AVAILABILITY</p><h2 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-.055em] sm:text-5xl">Ready to recover your next $25,000?</h2><p className="mt-5 max-w-xl leading-7 opacity-75">See the highest-impact workflow for your practice in a guided Revenue Recovery pilot.</p><Link href="/contact" className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#07111f] px-6 py-3.5 font-semibold text-white">Book my pilot <ArrowRight size={18}/></Link></div></section>
-  <footer className="mt-20 border-t border-white/10 px-6 py-12"><div className="mx-auto flex max-w-7xl flex-col gap-7 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between"><p>© 2026 Vanoji Stars Inc. All rights reserved.</p><div className="flex flex-wrap gap-5"><Link href="/privacy">Privacy</Link><Link href="/security">Security</Link><Link href="/contact">Contact</Link></div><p>HIPAA-ready · PIPEDA aligned · SOC 2 roadmap</p></div></footer>
-  </main>}
+export default function Home() {
+  return (
+    <main>
+      <Navbar />
+      <SectionDots />
+      <Hero />
+      <section className="border-y border-border bg-surface/40 py-8">
+        <TrustMarquee />
+      </section>
+      <section className="mx-auto max-w-7xl px-6 py-24">
+        <div className="grid gap-4 rounded-3xl border border-border bg-surface/60 p-6 text-center sm:grid-cols-3 sm:p-9">
+          <div>
+            <p className="text-4xl font-semibold text-primary">
+              <Counter value={92} suffix="%" />
+            </p>
+            <p className="mt-2 text-sm text-muted">Retention after 6 months</p>
+          </div>
+          <div className="border-y border-border py-6 sm:border-x sm:border-y-0 sm:py-0">
+            <p className="text-4xl font-semibold text-primary">
+              <Counter value={28} suffix="%" />
+            </p>
+            <p className="mt-2 text-sm text-muted">
+              More appointments recovered
+            </p>
+          </div>
+          <div>
+            <p className="text-4xl font-semibold text-primary">
+              <Counter value={7} suffix="×" />
+            </p>
+            <p className="mt-2 text-sm text-muted">Average ROI</p>
+          </div>
+        </div>
+      </section>
+      <VoiceDemo />
+      {/* <RoiCalculator /> */}
+      <RevenueDashboard />
+      <section id="platform" className="mx-auto max-w-7xl px-6 py-28">
+        <p className="eyebrow">THE RAYSKAI PLATFORM</p>
+        <h2 className="section-title mt-5 max-w-2xl">
+          A better front door for your entire business.
+        </h2>
+        <PlatformGrid />
+        {/* <PlatformCarousel /> */}
+      </section>
+      <section className="mx-auto max-w-7xl px-6 py-24">
+        <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
+          <div>
+            <p className="eyebrow">GO LIVE IN 14 DAYS</p>
+            <h2 className="section-title mt-5">
+              A clear path from first call to measurable growth.
+            </h2>
+            <p className="mt-6 leading-8 text-muted">
+              No hardware, phone replacement, or drawn-out rollout. Begin with
+              the work that has the clearest revenue impact.
+            </p>
+          </div>
+          <RolloutSteps />
+        </div>
+      </section>
+      <section className="mx-auto max-w-7xl px-6 py-24">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="eyebrow">BUILT FOR YOUR PRACTICE</p>
+            <h2 className="section-title mt-5">
+              One AI revenue team. Every patient moment.
+            </h2>
+          </div>
+          <Link
+            href="/solutions/dental"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary"
+          >
+            Explore solutions <ArrowRight size={16} />
+          </Link>
+        </div>
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {industries.map(([Icon, name, copy, href]) => (
+            <Link
+              href={href as string}
+              key={name as string}
+              className="group rounded-2xl border border-border bg-surface/60 p-6 transition hover:-translate-y-1 hover:border-primary/40"
+            >
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-white">
+                <Icon size={20} />
+              </span>
+              <p className="mt-5 text-lg font-semibold">{name as string}</p>
+              <p className="mt-3 text-sm leading-6 text-muted">
+                {copy as string}
+              </p>
+              <span className="mt-8 inline-flex text-primary transition group-hover:translate-x-1">
+                →
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section className="mx-auto max-w-7xl px-6 py-24">
+        <div className="rounded-3xl border border-border bg-gradient-to-br from-surface/60 to-transparent p-8 sm:p-12">
+          <p className="eyebrow">CUSTOMER OUTCOME</p>
+          <blockquote className="mt-7 max-w-4xl text-3xl font-semibold leading-tight tracking-[-.045em] sm:text-5xl">
+            “We stopped thinking of RayskAI as software and started thinking of
+            it as an additional revenue coordinator.”
+          </blockquote>
+          <div className="mt-10 flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="font-semibold">Ontario dental practice</p>
+              <p className="mt-1 text-sm text-muted">
+                Four providers · 45-day pilot
+              </p>
+            </div>
+            <p className="text-4xl font-semibold text-primary">
+              +$43,280{" "}
+              <span className="block text-sm font-normal text-muted">
+                recovered revenue
+              </span>
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="pricing" className="mx-auto max-w-7xl px-6 py-24">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow">SIMPLE, OUTCOME-ALIGNED PRICING</p>
+            <h2 className="section-title mt-5">
+              Start focused. Grow with results.
+            </h2>
+          </div>
+          <Link
+            href="/pricing"
+            className="rounded-full border border-border px-5 py-3 text-sm font-semibold"
+          >
+            View all pricing
+          </Link>
+        </div>
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          <article className="glass rounded-3xl p-7">
+            <p className="font-semibold">Revenue Recovery</p>
+            <p className="mt-5 text-4xl font-semibold text-primary">
+              $997
+              <span className="text-base font-normal text-muted">/month</span>
+            </p>
+            <p className="mt-5 text-sm leading-6 text-muted">
+              Missed-call recovery, SMS campaigns, intake forms, online booking,
+              and a real-time dashboard.
+            </p>
+            <Link
+              href="/pricing"
+              className="mt-7 inline-flex text-sm font-semibold text-primary"
+            >
+              Explore plan →
+            </Link>
+          </article>
+          <article className="rounded-3xl bg-primary p-7 text-white">
+            <p className="font-semibold">Revenue Growth</p>
+            <p className="mt-5 text-4xl font-semibold">
+              $1,997
+              <span className="text-base font-normal opacity-70">/month</span>
+            </p>
+            <p className="mt-5 text-sm leading-6 opacity-80">
+              Treatment follow-up, collections, insurance verification,
+              marketing automation, and advanced analytics.
+            </p>
+            <Link
+              href="/pricing"
+              className="mt-7 inline-flex text-sm font-semibold"
+            >
+              Explore plan →
+            </Link>
+          </article>
+        </div>
+      </section>
+      <section id="faq" className="mx-auto max-w-4xl px-6 py-24">
+        <p className="eyebrow">FAQ</p>
+        <h2 className="section-title mt-5">Questions, answered.</h2>
+        <FaqAccordion />
+      </section>
+      <footer id="contact" className="relative isolate mt-20 overflow-hidden bg-primary px-6 py-16 text-white">
+        <div className="grid-mask-light absolute inset-0 -z-10" />
+        <div className="relative mx-auto max-w-7xl">
+          <p className="font-semibold uppercase tracking-[.14em]">
+            LIMITED PILOT AVAILABILITY
+          </p>
+          <h2 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-.055em] sm:text-5xl">
+            Ready to recover your next $25,000?
+          </h2>
+          <p className="mt-5 max-w-xl leading-7 opacity-75">
+            See the highest-impact workflow for your practice in a guided
+            Revenue Recovery pilot.
+          </p>
+          <Link
+            href="/contact"
+            className="mt-8 inline-flex items-center gap-2 rounded-full bg-background px-6 py-3.5 font-semibold text-foreground"
+          >
+            Book my pilot <ArrowRight size={18} />
+          </Link>
+          <div className="mt-14 flex flex-col gap-7 border-t border-white/15 pt-10 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between">
+            <p>© 2026 Vanoji Stars Inc. All rights reserved.</p>
+            <div className="flex flex-wrap gap-5">
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/security">Security</Link>
+              <Link href="/contact">Contact</Link>
+            </div>
+            <p>HIPAA-ready · PIPEDA aligned · SOC 2 roadmap</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  );
+}

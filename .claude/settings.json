@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node shot-logo-zoom.js)",
+      "Bash(node debug-logo.js)"
+    ]
+  }
+}

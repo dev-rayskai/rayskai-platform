@@ -34,7 +34,7 @@ export default function Customers() {
         title="Built around the moments patients choose you."
         copy="Make the first response more useful, consistent, and revenue-aware."
       />
-      <section className="mx-auto grid max-w-7xl gap-5 px-6 pb-28 sm:grid-cols-2 lg:grid-cols-3">
+      <section id="stories" data-nav-label="Stories" className="mx-auto grid max-w-7xl gap-5 px-6 pb-28 sm:grid-cols-2 lg:grid-cols-3">
         {stories.map(([type, title, copy]) => (
           <article key={type} className="glass rounded-3xl p-7">
             <p className="text-sm font-semibold text-primary">{type}</p>

@@ -6,7 +6,7 @@ const bars = [
 ];
 export function Hero() {
   return (
-    <section className="relative isolate overflow-hidden pt-36">
+    <section id="hero" data-nav-label="Home" className="relative isolate overflow-hidden pt-36">
       <div className="grid-mask absolute inset-0 -z-20" />
       <div className="absolute left-1/2 top-8 -z-10 h-[560px] w-[760px] -translate-x-1/2 rounded-full bg-primary/20 blur-[150px]" />
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 pb-28 lg:grid-cols-[1.1fr_.9fr]">

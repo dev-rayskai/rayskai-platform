@@ -27,7 +27,7 @@ export function VoiceDemo(){
   const visible=messages.slice(0,step);
   const pending=playing&&step<messages.length?messages[step]:null;
 
-  return <section id="demo" className="mx-auto max-w-7xl px-6 py-28">
+  return <section id="demo" data-nav-label="Demo" className="mx-auto max-w-7xl px-6 py-28">
     <div className="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
       <div>
         <p className="eyebrow">LIVE VOICE EXPERIENCE</p>

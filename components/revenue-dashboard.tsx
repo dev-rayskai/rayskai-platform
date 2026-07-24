@@ -17,7 +17,7 @@ const activity=[
 
 export function RevenueDashboard(){
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
+    <section id="revenue" data-nav-label="Revenue" className="mx-auto max-w-7xl px-6 py-24">
       <div className="grid gap-14 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
         <motion.div
           initial={{opacity:0,y:24}}

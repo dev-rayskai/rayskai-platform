@@ -11,6 +11,7 @@ import { RevenueDashboard } from "@/components/revenue-dashboard";
 import { RoiCalculator } from "@/components/roi-calculator";
 import { RolloutSteps } from "@/components/rollout-steps";
 import { SectionDots } from "@/components/section-dots";
+import { SiteFooter } from "@/components/site-footer";
 import { TrustMarquee } from "@/components/trust-marquee";
 import { VoiceDemo } from "@/components/voice-demo";
 
@@ -83,7 +84,7 @@ export default function Home() {
       <VoiceDemo />
       {/* <RoiCalculator /> */}
       <RevenueDashboard />
-      <section id="platform" className="mx-auto max-w-7xl px-6 py-28">
+      <section id="platform" data-nav-label="Platform" className="mx-auto max-w-7xl px-6 py-28">
         <p className="eyebrow">THE RAYSKAI PLATFORM</p>
         <h2 className="section-title mt-5 max-w-2xl">
           A better front door for your entire business.
@@ -91,7 +92,7 @@ export default function Home() {
         <PlatformGrid />
         {/* <PlatformCarousel /> */}
       </section>
-      <section className="mx-auto max-w-7xl px-6 py-24">
+      <section id="process" data-nav-label="Process" className="mx-auto max-w-7xl px-6 py-24">
         <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
           <div>
             <p className="eyebrow">GO LIVE IN 14 DAYS</p>
@@ -165,7 +166,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section id="pricing" className="mx-auto max-w-7xl px-6 py-24">
+      <section id="pricing" data-nav-label="Pricing" className="mx-auto max-w-7xl px-6 py-24">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">SIMPLE, OUTCOME-ALIGNED PRICING</p>
@@ -217,41 +218,12 @@ export default function Home() {
           </article>
         </div>
       </section>
-      <section id="faq" className="mx-auto max-w-4xl px-6 py-24">
+      <section id="faq" data-nav-label="FAQ" className="mx-auto max-w-4xl px-6 py-24">
         <p className="eyebrow">FAQ</p>
         <h2 className="section-title mt-5">Questions, answered.</h2>
         <FaqAccordion />
       </section>
-      <footer id="contact" className="relative isolate mt-20 overflow-hidden bg-primary px-6 py-16 text-white">
-        <div className="grid-mask-light absolute inset-0 -z-10" />
-        <div className="relative mx-auto max-w-7xl">
-          <p className="font-semibold uppercase tracking-[.14em]">
-            LIMITED PILOT AVAILABILITY
-          </p>
-          <h2 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-.055em] sm:text-5xl">
-            Ready to recover your next $25,000?
-          </h2>
-          <p className="mt-5 max-w-xl leading-7 opacity-75">
-            See the highest-impact workflow for your practice in a guided
-            Revenue Recovery pilot.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-background px-6 py-3.5 font-semibold text-foreground"
-          >
-            Book my pilot <ArrowRight size={18} />
-          </Link>
-          <div className="mt-14 flex flex-col gap-7 border-t border-white/15 pt-10 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between">
-            <p>© 2026 Vanoji Stars Inc. All rights reserved.</p>
-            <div className="flex flex-wrap gap-5">
-              <Link href="/privacy">Privacy</Link>
-              <Link href="/security">Security</Link>
-              <Link href="/contact">Contact</Link>
-            </div>
-            <p>HIPAA-ready · PIPEDA aligned · SOC 2 roadmap</p>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

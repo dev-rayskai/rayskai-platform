@@ -1,21 +1,23 @@
 "use client";
 
+import {usePathname} from "next/navigation";
 import {useEffect, useState} from "react";
 
-const sections=[
-  {id:"hero",label:"Home"},
-  {id:"demo",label:"Demo"},
-  {id:"roi",label:"ROI"},
-  {id:"platform",label:"Platform"},
-  {id:"pricing",label:"Pricing"},
-  {id:"faq",label:"FAQ"},
-  {id:"contact",label:"Contact"},
-];
+type Section = {id: string; label: string};
 
 export function SectionDots(){
-  const [active,setActive]=useState("hero");
+  const pathname=usePathname();
+  const [sections,setSections]=useState<Section[]>([]);
+  const [active,setActive]=useState("");
 
   useEffect(()=>{
+    const elements=Array.from(document.querySelectorAll<HTMLElement>("[data-nav-label]")).filter(el=>el.id);
+    const discovered=elements.map(el=>({id:el.id,label:el.dataset.navLabel ?? el.id}));
+    setSections(discovered);
+    setActive(discovered[0]?.id ?? "");
+
+    if(elements.length===0)return;
+
     const observer=new IntersectionObserver(
       entries=>{
         entries.forEach(entry=>{
@@ -24,12 +26,11 @@ export function SectionDots(){
       },
       {rootMargin:"-45% 0px -45% 0px"}
     );
-    const elements=sections
-      .map(({id})=>document.getElementById(id))
-      .filter((el):el is HTMLElement=>el!==null);
     elements.forEach(el=>observer.observe(el));
     return ()=>observer.disconnect();
-  },[]);
+  },[pathname]);
+
+  if(sections.length===0)return null;
 
   return (
     <div className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-center gap-4 rounded-full border border-border bg-surface/80 px-2.5 py-4 shadow-xl backdrop-blur-md lg:flex">

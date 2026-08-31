@@ -126,3 +126,7 @@ main{position:relative;overflow:hidden;background:linear-gradient(180deg,#fbfcfa
 @media(min-width:1051px){.cover-hero .hero-visual{right:4%;bottom:52px;width:410px;padding:22px;border-radius:25px}.cover-hero .revenue-block{margin:28px 0 12px}.cover-hero .revenue-block strong{font-size:44px}.cover-hero .chart{height:96px}.cover-hero .metric-grid{margin:14px 0}.cover-hero .metric-grid div{padding:11px}.cover-hero .audit-row{padding:11px}.waitlist-callout{top:92px;right:18px}.booking-callout{left:18px;bottom:68px}}
 @media(min-width:901px) and (max-width:1050px){.cover-hero .hero-visual{right:3%;bottom:54px;width:360px;padding:20px}.cover-hero .revenue-block strong{font-size:40px}.cover-hero .chart{height:88px}}
 @media(max-width:600px){.hero-wrap{background-image:linear-gradient(180deg,#020b11ed 0%,#031018ed 52%,#06141fed 100%),url('/hero-cover-clean.png')}}
+
+/* Keep the live opportunity view anchored at the hero's right-most edge */
+@media(min-width:901px){.cover-hero .hero-visual{right:0}}
+@media(max-width:900px){.cover-hero .hero-visual{margin-left:auto;margin-right:0}}

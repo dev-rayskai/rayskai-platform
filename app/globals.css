@@ -130,3 +130,9 @@ main{position:relative;overflow:hidden;background:linear-gradient(180deg,#fbfcfa
 /* Keep the live opportunity view anchored at the hero's right-most edge */
 @media(min-width:901px){.cover-hero .hero-visual{right:0}}
 @media(max-width:900px){.cover-hero .hero-visual{margin-left:auto;margin-right:0}}
+
+/* Refined hero balance: a quieter opportunity panel, set slightly lower */
+@media(min-width:1051px){.cover-hero .hero-visual{bottom:28px;width:385px}}
+@media(min-width:901px) and (max-width:1050px){.cover-hero .hero-visual{bottom:32px;width:340px}}
+@media(max-width:900px){.cover-hero .hero-stage{margin-top:66px}.cover-hero .hero-visual{width:min(92%,520px)}}
+@media(max-width:600px){.cover-hero .hero-stage{margin-top:60px}.cover-hero .hero-visual{width:96%}}

@@ -185,3 +185,9 @@ main{position:relative;overflow:hidden;background:linear-gradient(180deg,#fbfcfa
 
 /* Align the opportunity view with the opening headline */
 @media(min-width:901px){.cover-hero .hero-visual{top:230px;translate:none}}
+
+/* Reframe the clinic so the operatory equipment becomes the visual center */
+@media(min-width:1350px){.hero-wrap{background-size:auto 120%;background-position:right center}}
+@media(min-width:901px) and (max-width:1349px){.hero-wrap{background-position:right center}}
+@media(max-width:900px){.hero-wrap{background-position:74% center}}
+@media(max-width:600px){.hero-wrap{background-position:74% top}}

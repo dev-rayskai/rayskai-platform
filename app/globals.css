@@ -136,3 +136,45 @@ main{position:relative;overflow:hidden;background:linear-gradient(180deg,#fbfcfa
 @media(min-width:901px) and (max-width:1050px){.cover-hero .hero-visual{bottom:32px;width:340px}}
 @media(max-width:900px){.cover-hero .hero-stage{margin-top:66px}.cover-hero .hero-visual{width:min(92%,520px)}}
 @media(max-width:600px){.cover-hero .hero-stage{margin-top:60px}.cover-hero .hero-visual{width:96%}}
+
+/* Editorial refinement — stronger hierarchy, fewer boxes, faster narrative rhythm */
+:where(.demo-intro,.recovery-proof,.system-heading,.pricing-heading,.cta) h2 em{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:400;letter-spacing:-.05em}
+.demo-intro h2 em,.pricing-heading h2 em{color:#0d8e72}.recovery-proof h2 em,.system-heading h2 em{color:#9af0cf}.cta h2 em{color:#0b6f5c}
+
+/* Shorter, more deliberate chapters */
+.product-demo{min-height:auto;padding-top:125px;padding-bottom:130px}.recovery-proof{padding-top:112px;padding-bottom:112px}.integration-matrix-section{padding-top:105px;padding-bottom:120px}.section-dark{padding-block:125px}.human-section,.growth-layout{padding-top:130px;padding-bottom:135px}.trust-section{padding-block:120px}.system-section{padding-top:115px;padding-bottom:82px}#packages{padding-top:125px;padding-bottom:120px}.faq-section{padding-block:120px}.outcome-banner{margin-top:90px;margin-bottom:90px}.cta{padding-block:100px}
+.section-heading{margin-bottom:44px}.section-heading h2{max-width:820px}.section-heading>p{max-width:420px}
+
+/* Full-bleed clinic photo essay */
+.clinic-visual{width:calc(100% - 36px);max-width:none;margin-inline:18px;padding:0;grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr);gap:0;overflow:hidden;border-block:1px solid #d9e4df;background:#eef5f1}.clinic-photo{height:640px;border-radius:0;box-shadow:none}.clinic-photo img{height:100%;aspect-ratio:auto;object-fit:cover}.clinic-visual-copy{display:flex;flex-direction:column;justify-content:center;padding:70px 64px}.clinic-visual-copy h2{font-size:clamp(45px,4.8vw,70px)}
+
+/* The clinic foundation reads as an editorial feature, not three equal product cards */
+.foundation-grid{grid-template-columns:1.18fr .91fr .91fr;gap:34px;align-items:start}.foundation-card{min-height:0;padding:30px 22px 32px 0;border:0;border-top:1px solid #a9bdb4;border-radius:0;background:transparent;box-shadow:none}.foundation-card:nth-child(1){padding-right:42px}.foundation-card:nth-child(2){margin-top:82px}.foundation-card:nth-child(3){margin-top:30px}.foundation-card::before{display:none}.foundation-card:hover{transform:none;box-shadow:none}.foundation-card h3{margin-top:30px}.foundation-card>p{min-height:0}.foundation-card ul{margin-top:26px;padding-top:20px}
+
+/* Keep the integration matrix factual and publication-like */
+.integration-table{border-width:1px 0;border-radius:0;box-shadow:none}.integration-row{padding-block:17px}.integration-note{margin-top:24px;border-radius:0;border-left:2px solid #45bd98;background:transparent}
+
+/* Workflow cards use varied scale rather than a mechanical three-up grid */
+.workflow-grid{grid-template-columns:.9fr 1.2fr .9fr;align-items:start;gap:18px}.workflow-card{min-height:410px;border:0;border-radius:8px;box-shadow:none}.workflow-card:nth-child(2){min-height:470px;margin-top:-24px}.workflow-card:hover{box-shadow:none}.workflow-card:nth-child(2):hover{transform:translateY(8px)}
+
+/* Human imagery carries the chapter */
+.human-main,.human-detail{border-radius:6px}.human-main img,.human-detail img{border-radius:6px}.human-copy h2{max-width:760px}.collage-stat{border-radius:4px}
+
+/* Trust is a concise checklist, not another card wall */
+.trust-grid{gap:0 24px}.trust-grid div{border:0;border-bottom:1px solid #ffffff1b;border-radius:0;background:transparent;padding:14px 2px;box-shadow:none}.trust-grid div:nth-last-child(-n+2){border-bottom:0}
+
+/* Asymmetric revenue operating system */
+.system-section .system-grid{grid-template-columns:repeat(12,1fr);gap:12px}.system-section .system-grid article{min-height:250px;border-radius:12px}.system-section .system-grid article:nth-child(1),.system-section .system-grid article:nth-child(4){grid-column:span 7}.system-section .system-grid article:nth-child(2),.system-section .system-grid article:nth-child(3){grid-column:span 5}.system-section .system-grid article:nth-child(1){background:linear-gradient(155deg,#123d42,#09242e)}.system-section .system-grid article:nth-child(4){background:linear-gradient(155deg,#ffffff0b,#ffffff04)}
+
+/* Commercial chapter: one recommendation, quieter alternatives */
+.package-grid{grid-template-columns:.82fr 1.18fr .92fr .82fr;gap:16px;align-items:start}.package{min-height:0}.package:not(.featured){padding:24px 12px 26px;border:0;border-top:1px solid #a8bbb2;border-radius:0;background:transparent;box-shadow:none}.package:not(.featured):hover{transform:none;box-shadow:none}.package.featured{transform:translateY(-20px);border-radius:14px;box-shadow:0 38px 95px #06142130}.package.featured:hover{transform:translateY(-24px)}.package h3{margin-top:34px}.package ul{gap:11px}.pricing-note{margin-top:50px}
+
+/* Closing proof becomes an editorial pull quote */
+.outcome-banner{padding:60px 0;border:0;border-block:1px solid #b9cbc3;border-radius:0;background:transparent;box-shadow:none}.outcome-banner::before{display:none}.outcome-banner h2{max-width:520px}.outcome-banner p{font-family:Georgia,'Times New Roman',serif;font-size:clamp(24px,3vw,38px);font-style:italic;font-weight:400;line-height:1.25}.outcome-steps{justify-content:flex-end}.outcome-steps span{border-radius:0;background:transparent;border-bottom:1px solid #88a69a}
+
+@media(max-width:900px){
+  .product-demo{padding-block:100px}.recovery-proof{padding-block:90px}.clinic-visual{width:calc(100% - 20px);margin-inline:10px;grid-template-columns:1fr}.clinic-photo{height:520px}.clinic-visual-copy{margin:0;padding:55px 38px}.clinic-visual-copy h2{font-size:54px}#platform{padding-block:92px}.foundation-grid{grid-template-columns:1fr;gap:0}.foundation-card,.foundation-card:nth-child(1),.foundation-card:nth-child(2),.foundation-card:nth-child(3){min-height:0;margin-top:0;padding:28px 0}.foundation-card ul{grid-template-columns:1fr 1fr}.integration-matrix-section{padding-block:86px}.section-dark{padding-block:95px}.workflow-grid{grid-template-columns:1fr;gap:12px}.workflow-card,.workflow-card:nth-child(2){min-height:0;margin-top:0}.human-section,.growth-layout{padding-block:100px}.trust-section{padding-block:95px}.system-section{padding-block:90px}.system-section .system-grid{grid-template-columns:1fr 1fr}.system-section .system-grid article:nth-child(n){grid-column:auto;min-height:255px}#packages{padding-block:105px}.package-grid{grid-template-columns:1fr 1fr;gap:12px}.package.featured,.package.featured:hover{transform:none}.faq-section{padding-block:90px}.outcome-banner{margin-block:70px;padding-block:50px}.cta{padding-block:80px}
+}
+@media(max-width:600px){
+  :where(.demo-intro,.recovery-proof,.system-heading,.pricing-heading,.cta) h2 em{display:inline}.product-demo{padding-block:86px}.recovery-proof{padding-block:78px}.clinic-visual{width:100%;margin:0}.clinic-photo{height:390px}.clinic-visual-copy{padding:42px 24px}.clinic-visual-copy h2{font-size:45px}.foundation-card ul{grid-template-columns:1fr}.integration-matrix-section{padding-block:76px}.section-dark{padding-block:82px}.workflow-card{padding:24px}.human-section,.growth-layout{padding-block:88px}.trust-section{padding-block:82px}.system-section{padding-block:78px}.system-section .system-grid{grid-template-columns:1fr}.system-section .system-grid article:nth-child(n){min-height:225px}#packages{padding-block:90px}.package-grid{grid-template-columns:1fr}.package:not(.featured){padding-inline:4px}.faq-section{padding-block:78px}.outcome-banner{margin-block:58px;padding-block:42px}.outcome-banner p{font-size:25px}.cta{padding-block:72px}
+}

@@ -182,3 +182,6 @@ main{position:relative;overflow:hidden;background:linear-gradient(180deg,#fbfcfa
 /* Center the live opportunity view on the hero's far-right edge */
 @media(min-width:901px){.cover-hero .hero-visual{top:50%;right:0;bottom:auto;translate:0 -50%}}
 @media(max-width:900px){.cover-hero .hero-visual{top:auto;bottom:auto;translate:none}}
+
+/* Align the opportunity view with the opening headline */
+@media(min-width:901px){.cover-hero .hero-visual{top:230px;translate:none}}

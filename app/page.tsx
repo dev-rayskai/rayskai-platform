@@ -55,19 +55,35 @@ const faqs = [
   ['Can RaySky transfer a conversation to our team?', 'Yes. RaySky can escalate to a staff member with the patient context, conversation summary, and recommended next step intact. Clinical questions, disputes, and policy exceptions are always routed to the appropriate person.'],
   ['Is RaySky designed for healthcare privacy?', 'RaySky is designed around role-based access, audit logs, consent and opt-out controls, configurable recording and retention, encryption, and human escalation. HIPAA or PHIPA requirements are addressed according to your market and deployment.'],
   ['Do I have to sign a long-term contract?', 'No. Choose monthly billing for flexibility or yearly billing to have the setup cost waived. The subscription rate is the same for both options.'],
+  ['How is the recovery plan calculated?', 'The planner compares your current 90-day baseline with a visible planning target, applies your expected attendance rate, and caps appointment gains at your available monthly chair capacity. Completed production and patient-balance collections are reported separately. The result is a planning estimate—not a guarantee—and is replaced by audited clinic data during implementation.'],
 ];
+
+type Scenario = 'conservative' | 'expected' | 'potential';
+type RateKey = 'lead' | 'missed' | 'recall' | 'cancellation' | 'insurance' | 'treatment' | 'collections';
+const scenarioTargets: Record<Scenario, Record<RateKey, number>> = {
+  conservative: { lead: 35, missed: 35, recall: 14, cancellation: 45, insurance: 65, treatment: 25, collections: 8 },
+  expected: { lead: 45, missed: 50, recall: 20, cancellation: 60, insurance: 75, treatment: 30, collections: 12 },
+  potential: { lead: 55, missed: 65, recall: 28, cancellation: 75, insurance: 85, treatment: 40, collections: 18 },
+};
+const scenarioLabels: Record<Scenario, string> = { conservative: 'Conservative', expected: 'Expected', potential: 'Potential' };
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 function Check() { return <span className="check" aria-hidden="true">✓</span>; }
-function RecoverySlider({label,value,min,max,step=1,prefix='',suffix='',onChange}:{label:string;value:number;min:number;max:number;step?:number;prefix?:string;suffix?:string;onChange:(value:number)=>void}) {
-  return <label className="recovery-control"><span><strong>{label}</strong><b>{prefix}{value.toLocaleString()}{suffix}</b></span><input type="range" min={min} max={max} step={step} value={value} onChange={event=>onChange(Number(event.target.value))}/><small><i>{prefix}{min.toLocaleString()}{suffix}</i><i>{prefix}{max.toLocaleString()}{suffix}</i></small></label>;
+function RecoverySlider({label,note,value,min,max,step=1,prefix='',suffix='',onChange}:{label:string;note?:string;value:number;min:number;max:number;step?:number;prefix?:string;suffix?:string;onChange:(value:number)=>void}) {
+  return <label className="recovery-control"><span><span><strong>{label}</strong>{note&&<em>{note}</em>}</span><b>{prefix}{value.toLocaleString()}{suffix}</b></span><input aria-label={label} type="range" min={min} max={max} step={step} value={value} onChange={event=>onChange(Number(event.target.value))}/><small><i>{prefix}{min.toLocaleString()}{suffix}</i><i>{prefix}{max.toLocaleString()}{suffix}</i></small></label>;
 }
 
 export default function Home() {
   const [yearly, setYearly] = useState(true);
   const [demoRunning, setDemoRunning] = useState(false);
   const [demoStep, setDemoStep] = useState(0);
-  const [recoveryInputs, setRecoveryInputs] = useState({newLeads:60,missedCalls:25,overdueRecall:120,cancellations:12,insuranceIssues:18,treatmentValue:25000,outstandingBalances:45000,averageVisit:550});
+  const [scenario, setScenario] = useState<Scenario>('expected');
+  const [recoveryInputs, setRecoveryInputs] = useState({
+    newLeads: 60, missedCalls: 25, overdueRecall: 120, cancellations: 12, insuranceIssues: 18,
+    treatmentValue: 25000, outstandingBalances: 45000, averageVisit: 550, openVisits: 60, attendanceRate: 85,
+    leadBaseline: 25, missedBaseline: 15, recallBaseline: 8, cancellationBaseline: 25,
+    insuranceBaseline: 50, treatmentBaseline: 20, collectionsBaseline: 4,
+  });
   useEffect(() => {
     if (!demoRunning) return;
     const timer = window.setInterval(() => {
@@ -83,26 +99,39 @@ export default function Home() {
   }, [demoRunning]);
   const runDemo = () => { setDemoStep(0); setDemoRunning(true); };
   const updateRecovery = (key:keyof typeof recoveryInputs,value:number) => setRecoveryInputs(current=>({...current,[key]:value}));
-  const newLeadAppointments = recoveryInputs.newLeads * .18;
-  const missedCallAppointments = recoveryInputs.missedCalls * 4.33 * .35;
-  const recallAppointments = recoveryInputs.overdueRecall * .12;
-  const cancellationAppointments = recoveryInputs.cancellations * .55;
-  const insuranceProtectedAppointments = recoveryInputs.insuranceIssues * .25;
-  const recoveredAppointments = Math.round(newLeadAppointments + missedCallAppointments + recallAppointments + cancellationAppointments + insuranceProtectedAppointments);
-  const treatmentRecovered = recoveryInputs.treatmentValue * .08;
-  const balancesRecovered = recoveryInputs.outstandingBalances * .06;
-  const recoveredProduction = Math.round(((recoveredAppointments * recoveryInputs.averageVisit) + treatmentRecovered + balancesRecovered) / 100) * 100;
-  const atRiskOpportunities = Math.round((recoveryInputs.newLeads * .25) + (recoveryInputs.missedCalls * 4.33) + recoveryInputs.overdueRecall + recoveryInputs.cancellations + recoveryInputs.insuranceIssues);
+  const targets = scenarioTargets[scenario];
+  const rateLift = (target:number, baseline:number) => Math.max(0, target - baseline) / 100;
+  const attendance = recoveryInputs.attendanceRate / 100;
+  const opportunityAppointments = {
+    lead: recoveryInputs.newLeads * rateLift(targets.lead, recoveryInputs.leadBaseline) * attendance,
+    missed: recoveryInputs.missedCalls * 4.33 * rateLift(targets.missed, recoveryInputs.missedBaseline) * attendance,
+    recall: recoveryInputs.overdueRecall * rateLift(targets.recall, recoveryInputs.recallBaseline) * attendance,
+    cancellation: recoveryInputs.cancellations * rateLift(targets.cancellation, recoveryInputs.cancellationBaseline) * attendance,
+    insurance: recoveryInputs.insuranceIssues * rateLift(targets.insurance, recoveryInputs.insuranceBaseline) * attendance,
+  };
+  const rawAppointments = Object.values(opportunityAppointments).reduce((total,value)=>total+value,0);
+  const capacityScale = rawAppointments > 0 ? Math.min(1, recoveryInputs.openVisits / rawAppointments) : 0;
+  const gainedAppointments = (opportunityAppointments.lead + opportunityAppointments.missed + opportunityAppointments.recall + opportunityAppointments.cancellation) * capacityScale;
+  const protectedAppointments = opportunityAppointments.insurance * capacityScale;
+  const totalAppointments = gainedAppointments + protectedAppointments;
+  const appointmentProduction = totalAppointments * recoveryInputs.averageVisit;
+  const treatmentProduction = recoveryInputs.treatmentValue * rateLift(targets.treatment, recoveryInputs.treatmentBaseline);
+  const completedProduction = Math.round((appointmentProduction + treatmentProduction) / 100) * 100;
+  const cashRecovered = Math.round((recoveryInputs.outstandingBalances * rateLift(targets.collections, recoveryInputs.collectionsBaseline)) / 100) * 100;
+  const atRiskOpportunities = Math.round(recoveryInputs.newLeads + (recoveryInputs.missedCalls * 4.33) + recoveryInputs.overdueRecall + recoveryInputs.cancellations + recoveryInputs.insuranceIssues);
+  const capacityUsed = recoveryInputs.openVisits > 0 ? Math.min(100, Math.round((totalAppointments / recoveryInputs.openVisits) * 100)) : 0;
   const priorityValues = [
-    ['Lead capture & conversion',newLeadAppointments * recoveryInputs.averageVisit],
-    ['Missed-call recovery',missedCallAppointments * recoveryInputs.averageVisit],
-    ['Recall + cancellation recovery',(recallAppointments + cancellationAppointments) * recoveryInputs.averageVisit],
-    ['Treatment coordination',treatmentRecovered],
-    ['Insurance + collections',(insuranceProtectedAppointments * recoveryInputs.averageVisit) + balancesRecovered],
-  ] as const;
-  const priorityWorkflow = [...priorityValues].sort((a,b)=>b[1]-a[1])[0][0];
-  const recommendedPlan = recoveredProduction < 5000 ? 'Foundation' : (recoveryInputs.treatmentValue >= 20000 || recoveryInputs.newLeads >= 80 || recoveryInputs.outstandingBalances >= 75000) ? 'Growth' : 'Recovery';
-  const recoveryMailto = `mailto:hello@raysky.ai?subject=${encodeURIComponent('My RaySky clinic recovery plan')}&body=${encodeURIComponent(`Estimated monthly opportunity: $${recoveredProduction.toLocaleString()}\nAppointments potentially recovered: ${recoveredAppointments}\nAt-risk opportunities reviewed: ${atRiskOpportunities}\nPriority workflow: ${priorityWorkflow}\nRecommended package: ${recommendedPlan}\n\nI would like to review this plan with RaySky.`)}`;
+    {label:'Lead capture & conversion', value:opportunityAppointments.lead * capacityScale * recoveryInputs.averageVisit, plan:'Growth'},
+    {label:'Missed-call recovery', value:opportunityAppointments.missed * capacityScale * recoveryInputs.averageVisit, plan:'Recovery'},
+    {label:'Recall + cancellation recovery', value:(opportunityAppointments.recall + opportunityAppointments.cancellation) * capacityScale * recoveryInputs.averageVisit, plan:'Recovery'},
+    {label:'Treatment coordination', value:treatmentProduction, plan:'Growth'},
+    {label:'Insurance + collections', value:(opportunityAppointments.insurance * capacityScale * recoveryInputs.averageVisit) + cashRecovered, plan:'Growth'},
+  ];
+  const priority = [...priorityValues].sort((a,b)=>b.value-a.value)[0];
+  const priorityWorkflow = priority.value > 0 ? priority.label : 'Closed-loop scheduling foundation';
+  const recommendedPlan = priority.value > 0 ? priority.plan : 'Foundation';
+  const formatAppointments = (value:number) => (Math.round(value * 10) / 10).toLocaleString(undefined,{maximumFractionDigits:1});
+  const recoveryMailto = `mailto:hello@raysky.ai?subject=${encodeURIComponent('My RaySky clinic recovery plan')}&body=${encodeURIComponent(`${scenarioLabels[scenario]} planning scenario\nIncremental completed production: $${completedProduction.toLocaleString()}\nPatient-balance cash recovered: $${cashRecovered.toLocaleString()}\nAppointments gained: ${formatAppointments(gainedAppointments)}\nAppointments protected: ${formatAppointments(protectedAppointments)}\nAvailable capacity used: ${capacityUsed}%\nPriority workflow: ${priorityWorkflow}\nRecommended package: ${recommendedPlan}\n\nI would like to validate this plan against my clinic's 90-day baseline with RaySky.`)}`;
   return <main>
     <div className="hero-wrap">
     <nav className="nav shell" aria-label="Primary navigation"><a className="brand" href="#top"><span className="brand-mark">R</span><span className="brand-name">RaySky<small>Dental OS</small></span></a><div className="nav-links"><a href="#platform">Platform</a><a href="#growth">Growth</a><a href="#trust">Trust</a><a href="#packages">Pricing</a><a href="#faq">FAQ</a></div><a className="button button-small" href="#demo">See your recovery plan <Arrow /></a></nav>
@@ -142,7 +171,56 @@ export default function Home() {
     <section id="packages" className="section shell"><div className="section-heading pricing-heading"><div><span className="kicker">Simple pricing</span><h2>Start where you are. <em>Expand when RaySky proves the return.</em></h2></div><p>One clear platform fee per location. Every plan includes measurable outcomes, human escalation, and a complete audit trail.</p></div><div className="billing-toggle" aria-label="Billing frequency"><button type="button" className={!yearly?'active':''} onClick={()=>setYearly(false)}>Monthly</button><button type="button" className={yearly?'active':''} onClick={()=>setYearly(true)}>Yearly <span>Best value</span></button></div><div className="package-grid">{packages.map((plan,index) => { const price=yearly?plan.yearlyPrice:plan.monthlyPrice; return <article key={plan.name} className={plan.badge?'package featured':'package'}><div className="package-head"><span>0{index+1}</span>{plan.badge&&<b>{plan.badge}</b>}</div><h3>{plan.name}</h3><div className="package-price"><strong>{price}</strong>{price!=='Custom'&&<span>/month<br/>per location</span>}</div>{yearly&&plan.yearlyTotal&&<small className="billing-total">Billed {plan.yearlyTotal}</small>}<p>{plan.description}</p><small className={`setup ${yearly&&plan.name!=='Enterprise'?'waived':''}`}>{yearly&&plan.name!=='Enterprise'?'✓ Setup waived':plan.setup}</small><ul>{plan.features.map(item=><li key={item}><Check />{item}</li>)}</ul><a href="#demo">Choose {plan.name} <Arrow /></a></article>})}</div><p className="pricing-note">{yearly?'Yearly plans keep the same monthly rate and waive the setup cost. ':'Monthly plans offer maximum flexibility. '}Conversation usage, payments, and advertising are handled separately. <a href="#faq">See common questions</a>.</p></section>
     <section id="faq" className="section faq-section"><div className="shell faq-layout"><div className="faq-intro"><span className="kicker">Frequently asked questions</span><h2>Clear answers before you start.</h2><p>Everything you need to understand implementation, usage, integrations, privacy, and choosing a plan.</p><a className="text-link" href="mailto:hello@raysky.ai?subject=RaySky%20pricing%20question">Ask us a question <Arrow /></a></div><div className="faq-list">{faqs.map(([question,answer],index)=><details key={question} open={index===0}><summary><span>{question}</span><i aria-hidden="true">+</i></summary><p>{answer}</p></details>)}</div></div></section>
     <section className="section shell outcome-banner"><div><span className="kicker">Your clinic, clearly measured</span><h2>See exactly what RaySky recovered.</h2><p>“RaySky recovered 31 appointments worth $18,400 in production.”</p></div><div className="outcome-steps"><span>Patient opportunity</span><i>→</i><span>Task completed</span><i>→</i><span>Revenue verified</span></div></section>
-    <section id="demo" className="recovery-planner"><div className="shell"><div className="planner-heading"><span className="kicker">Your interactive revenue-cycle plan</span><h2>See what RaySky could <em>recover across your clinic.</em></h2><p>Adjust each part of the revenue cycle. RaySky will identify the highest-value starting workflow and estimate the monthly opportunity your team can validate during implementation.</p></div><div className="planner-grid"><div className="planner-inputs"><div className="planner-inputs-head"><span>Clinic revenue-cycle inputs</span><small>Adjust each estimate</small></div><RecoverySlider label="New leads each month" value={recoveryInputs.newLeads} min={0} max={300} step={10} onChange={value=>updateRecovery('newLeads',value)}/><RecoverySlider label="Missed calls each week" value={recoveryInputs.missedCalls} min={0} max={100} onChange={value=>updateRecovery('missedCalls',value)}/><RecoverySlider label="Patients overdue for recall" value={recoveryInputs.overdueRecall} min={0} max={500} step={10} onChange={value=>updateRecovery('overdueRecall',value)}/><RecoverySlider label="Monthly cancellations" value={recoveryInputs.cancellations} min={0} max={60} onChange={value=>updateRecovery('cancellations',value)}/><RecoverySlider label="Insurance issues each month" value={recoveryInputs.insuranceIssues} min={0} max={100} step={5} onChange={value=>updateRecovery('insuranceIssues',value)}/><RecoverySlider label="Unscheduled treatment value" value={recoveryInputs.treatmentValue} min={0} max={150000} step={2500} prefix="$" onChange={value=>updateRecovery('treatmentValue',value)}/><RecoverySlider label="Outstanding patient balances" value={recoveryInputs.outstandingBalances} min={0} max={250000} step={5000} prefix="$" onChange={value=>updateRecovery('outstandingBalances',value)}/><RecoverySlider label="Average completed visit value" value={recoveryInputs.averageVisit} min={150} max={2500} step={50} prefix="$" onChange={value=>updateRecovery('averageVisit',value)}/></div><aside className="planner-result" aria-live="polite"><div className="planner-result-top"><span><i/> Illustrative revenue-cycle plan</span><small>Monthly estimate</small></div><div className="planner-production"><span>Production and cash opportunity</span><output>${recoveredProduction.toLocaleString()}</output><small>Potentially recoverable each month</small></div><div className="planner-metrics"><div><strong>{recoveredAppointments}</strong><span>appointments gained or protected</span></div><div><strong>{atRiskOpportunities}</strong><span>opportunities reviewed</span></div></div><div className="planner-recommendation"><span>Highest-value starting point</span><strong>{priorityWorkflow}</strong><p>Recommended package: <b>{recommendedPlan}</b></p></div><div className="planner-path"><span>Demand</span><i>→</i><span>Care</span><i>→</i><span>Payment</span><i>→</i><strong>Verified revenue</strong></div><a className="button button-light" href={recoveryMailto}>Send me this revenue-cycle plan <Arrow /></a><small className="planner-disclaimer">Illustrative estimate based on configurable recovery assumptions. Your clinic baseline, workflow rules, and completed production determine verified results.</small></aside></div></div></section>
+    <section id="demo" className="recovery-planner">
+      <div className="shell">
+        <div className="planner-heading"><span className="kicker">Your interactive revenue-cycle plan</span><h2>Build a recovery plan your clinic can <em>actually validate.</em></h2><p>Start with mutually exclusive opportunity counts, then compare your latest 90-day baseline with a visible planning target. RaySky caps the estimate at the chair capacity you can fulfil.</p></div>
+        <div className="scenario-picker" aria-label="Planning scenario">
+          <span>Planning scenario</span>
+          <div>{(['conservative','expected','potential'] as Scenario[]).map(option=><button type="button" key={option} className={scenario===option?'active':''} aria-pressed={scenario===option} onClick={()=>setScenario(option)}>{scenarioLabels[option]}</button>)}</div>
+          <small>These targets are editable planning assumptions—not industry guarantees.</small>
+        </div>
+        <div className="planner-grid">
+          <div className="planner-inputs">
+            <div className="planner-inputs-head"><span>Monthly clinic opportunity</span><small>Use unique, deduplicated records</small></div>
+            <RecoverySlider label="New leads" note="Exclude callers counted below" value={recoveryInputs.newLeads} min={0} max={300} step={10} onChange={value=>updateRecovery('newLeads',value)}/>
+            <RecoverySlider label="Qualified missed calls each week" note="Exclude spam, duplicates and new leads" value={recoveryInputs.missedCalls} min={0} max={100} onChange={value=>updateRecovery('missedCalls',value)}/>
+            <RecoverySlider label="Eligible overdue recall patients" note="Contactable patients not counted elsewhere" value={recoveryInputs.overdueRecall} min={0} max={500} step={10} onChange={value=>updateRecovery('overdueRecall',value)}/>
+            <RecoverySlider label="Eligible cancellations" note="Open slots with a matching waitlist" value={recoveryInputs.cancellations} min={0} max={60} onChange={value=>updateRecovery('cancellations',value)}/>
+            <RecoverySlider label="Appointments at risk from insurance" note="Unique visits that may be delayed or lost" value={recoveryInputs.insuranceIssues} min={0} max={100} step={5} onChange={value=>updateRecovery('insuranceIssues',value)}/>
+            <RecoverySlider label="Existing unscheduled treatment" note="Adjusted value; exclude newly generated care" value={recoveryInputs.treatmentValue} min={0} max={150000} step={2500} prefix="$" onChange={value=>updateRecovery('treatmentValue',value)}/>
+            <RecoverySlider label="Eligible patient balances" note="Exclude insurance AR, disputes and write-offs" value={recoveryInputs.outstandingBalances} min={0} max={250000} step={5000} prefix="$" onChange={value=>updateRecovery('outstandingBalances',value)}/>
+            <RecoverySlider label="Adjusted collectible visit value" note="Not gross production" value={recoveryInputs.averageVisit} min={150} max={2500} step={50} prefix="$" onChange={value=>updateRecovery('averageVisit',value)}/>
+            <RecoverySlider label="Open visits available each month" note="Your provider and operatory capacity" value={recoveryInputs.openVisits} min={0} max={200} step={5} onChange={value=>updateRecovery('openVisits',value)}/>
+            <RecoverySlider label="Expected attendance rate" note="Booked visits that are completed" value={recoveryInputs.attendanceRate} min={40} max={100} suffix="%" onChange={value=>updateRecovery('attendanceRate',value)}/>
+            <details className="baseline-panel">
+              <summary><span>Enter your 90-day baseline</span><small>Required for a clinic-specific estimate</small></summary>
+              <div className="baseline-grid">
+                <RecoverySlider label="Lead booking" value={recoveryInputs.leadBaseline} min={0} max={80} suffix="%" onChange={value=>updateRecovery('leadBaseline',value)}/>
+                <RecoverySlider label="Missed-call recovery" value={recoveryInputs.missedBaseline} min={0} max={80} suffix="%" onChange={value=>updateRecovery('missedBaseline',value)}/>
+                <RecoverySlider label="Recall rebooking" value={recoveryInputs.recallBaseline} min={0} max={60} suffix="%" onChange={value=>updateRecovery('recallBaseline',value)}/>
+                <RecoverySlider label="Cancellation refill" value={recoveryInputs.cancellationBaseline} min={0} max={90} suffix="%" onChange={value=>updateRecovery('cancellationBaseline',value)}/>
+                <RecoverySlider label="Insurance issue resolution" value={recoveryInputs.insuranceBaseline} min={0} max={95} suffix="%" onChange={value=>updateRecovery('insuranceBaseline',value)}/>
+                <RecoverySlider label="Treatment completed" value={recoveryInputs.treatmentBaseline} min={0} max={80} suffix="%" onChange={value=>updateRecovery('treatmentBaseline',value)}/>
+                <RecoverySlider label="Monthly balance recovery" value={recoveryInputs.collectionsBaseline} min={0} max={30} suffix="%" onChange={value=>updateRecovery('collectionsBaseline',value)}/>
+              </div>
+            </details>
+          </div>
+          <aside className="planner-result" aria-live="polite">
+            <div className="planner-result-top"><span><i/> {scenarioLabels[scenario]} planning estimate</span><small>Monthly view</small></div>
+            <div className="planner-production"><span>Incremental completed production</span><output>${completedProduction.toLocaleString()}</output><small>Appointments plus existing treatment completed above baseline</small></div>
+            <div className="cash-result"><span>Patient-balance cash recovered</span><strong>${cashRecovered.toLocaleString()}</strong><small>Reported separately from production</small></div>
+            <div className="planner-metrics planner-metrics-four"><div><strong>{formatAppointments(gainedAppointments)}</strong><span>appointments gained</span></div><div><strong>{formatAppointments(protectedAppointments)}</strong><span>appointments protected</span></div><div><strong>{atRiskOpportunities}</strong><span>unique records reviewed</span></div><div><strong>{capacityUsed}%</strong><span>open capacity used</span></div></div>
+            <div className="planner-recommendation"><span>Highest-value starting point</span><strong>{priorityWorkflow}</strong><p>Recommended capability package: <b>{recommendedPlan}</b></p></div>
+            <div className="assumption-table"><div><span>Workflow</span><span>Your baseline</span><span>{scenarioLabels[scenario]} target</span></div>{([
+              ['Lead booking',recoveryInputs.leadBaseline,targets.lead],['Missed-call recovery',recoveryInputs.missedBaseline,targets.missed],['Recall rebooking',recoveryInputs.recallBaseline,targets.recall],['Cancellation refill',recoveryInputs.cancellationBaseline,targets.cancellation],['Insurance resolution',recoveryInputs.insuranceBaseline,targets.insurance],['Treatment completed',recoveryInputs.treatmentBaseline,targets.treatment],['Balance recovery',recoveryInputs.collectionsBaseline,targets.collections],
+            ] as [string,number,number][]).map(([label,baseline,target])=><div key={label}><span>{label}</span><span>{baseline}%</span><strong>{target}%</strong></div>)}</div>
+            {rawAppointments>recoveryInputs.openVisits&&<p className="capacity-note">Capacity protection applied: the model limits appointment gains to {recoveryInputs.openVisits} available visits.</p>}
+            <a className="button button-light" href={recoveryMailto}>Send me this validation plan <Arrow /></a>
+            <small className="planner-disclaimer">Planning estimate only—not a guarantee. Targets are visible assumptions. During implementation, RaySky replaces them with your clinic&apos;s deduplicated 90-day baseline and verifies completed production and collections from source systems.</small>
+          </aside>
+        </div>
+      </div>
+    </section>
     <footer className="footer shell"><a className="brand" href="#top"><span className="brand-mark">R</span><span className="brand-name">RaySky<small>Dental OS</small></span></a><p>AI revenue recovery for dental clinics.</p><div><a href="#platform">Platform</a><a href="#trust">Trust</a><a href="mailto:hello@raysky.ai">Contact</a></div><small>© 2026 RaySky. All rights reserved.</small></footer>
   </main>;
 }

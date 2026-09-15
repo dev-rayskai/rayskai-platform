@@ -94,10 +94,10 @@ export default function LuxuryWebGL() {
       gsap.fromTo(element, { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: element, start: 'top 86%', once: true } });
     });
 
-    const clock = new THREE.Clock();
+    const startedAt = performance.now();
     let frame = 0;
     const draw = () => {
-      uniforms.uTime.value = clock.getElapsedTime();
+      uniforms.uTime.value = (performance.now() - startedAt) / 1000;
       particles.rotation.z += .00035;
       renderer.render(scene, camera);
       frame = requestAnimationFrame(draw);

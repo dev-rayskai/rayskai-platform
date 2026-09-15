@@ -14,7 +14,7 @@ export default function RevenueAudit() {
   const [patientBalances, setPatientBalances] = useState(22000);
 
   const opportunities = useMemo<Opportunity[]>(() => [
-    { label: 'Patient acquisition', value: Math.round((missedCalls * 4.33 * .2 + unbookedLeads * .15) * 650), note: 'Missed calls and unbooked leads' },
+    { label: 'Growth and acquisition', value: Math.round((missedCalls * 4.33 * .2 + unbookedLeads * .15) * 650), note: 'Calls, ads, web leads, and follow-up' },
     { label: 'Schedule recovery', value: Math.round(cancellations * .25 * 550), note: 'Cancellation and waitlist recovery' },
     { label: 'Recall management', value: Math.round(overdueRecall * .08 * 425), note: 'Overdue patients returned to care' },
     { label: 'Treatment coordination', value: Math.round(unscheduledTreatment * .05), note: 'Pending treatment moved forward' },
@@ -34,7 +34,7 @@ export default function RevenueAudit() {
       `Missed calls each week: ${missedCalls}`,
       `Monthly cancellations: ${cancellations}`,
       `Overdue recall patients: ${overdueRecall}`,
-      `Unbooked leads each month: ${unbookedLeads}`,
+      `Ad and website leads not booked each month: ${unbookedLeads}`,
       `Unscheduled treatment: $${unscheduledTreatment.toLocaleString()}`,
       `Eligible patient balances: $${patientBalances.toLocaleString()}`,
       `Name: ${form.get('name')}`,
@@ -54,7 +54,7 @@ export default function RevenueAudit() {
     {step === 1 ? <div className="rl-audit-controls rl-audit-full">
       <div className="rl-audit-group"><span>Growth and scheduling</span>
         <label><span><b>Missed calls each week</b><strong>{missedCalls}</strong></span><input aria-label="Missed calls each week" type="range" min="0" max="80" value={missedCalls} onChange={event=>setMissedCalls(Number(event.target.value))} /></label>
-        <label><span><b>Unbooked leads each month</b><strong>{unbookedLeads}</strong></span><input aria-label="Unbooked leads each month" type="range" min="0" max="60" value={unbookedLeads} onChange={event=>setUnbookedLeads(Number(event.target.value))} /></label>
+        <label><span><b>Ad and website leads not booked</b><strong>{unbookedLeads}</strong></span><input aria-label="Ad and website leads not booked each month" type="range" min="0" max="60" value={unbookedLeads} onChange={event=>setUnbookedLeads(Number(event.target.value))} /></label>
         <label><span><b>Cancellations each month</b><strong>{cancellations}</strong></span><input aria-label="Monthly cancellations" type="range" min="0" max="40" value={cancellations} onChange={event=>setCancellations(Number(event.target.value))} /></label>
       </div>
       <div className="rl-audit-group"><span>Care and collections</span>
@@ -66,7 +66,7 @@ export default function RevenueAudit() {
     </div> : <div className="rl-audit-result rl-audit-report">
       <div className="rl-estimate"><span>Illustrative monthly revenue opportunity</span><output>{'$'}{estimate.toLocaleString()}</output><small>Planning estimate based on the assumptions shown below</small></div>
       <div className="rl-opportunity-grid">{opportunities.map(item => <article key={item.label}><span>{item.label}</span><strong>{'$'}{item.value.toLocaleString()}</strong><small>{item.note}</small></article>)}</div>
-      <p className="rl-assumptions">Planning assumptions: 20% of missed calls, 15% of unbooked leads, 25% of cancellations, 8% of overdue recalls, 5% of unscheduled treatment, and 12% of eligible balances create a completed monthly opportunity. Your full audit replaces these assumptions with your baseline and practice rules.</p>
+      <p className="rl-assumptions">Planning assumptions: 20% of missed calls, 15% of unbooked ad and website leads, 25% of cancellations, 8% of overdue recalls, 5% of unscheduled treatment, and 12% of eligible balances create a completed monthly opportunity. Your full audit replaces these assumptions with your baseline, acquisition channels, capacity, and practice rules.</p>
       <form className="rl-contact-form" onSubmit={submit}><div><strong>Want the full clinic audit?</strong><small>We will review your baseline, capacity, insurance friction, PMS fit, and reporting requirements.</small></div><label><span>Name</span><input name="name" autoComplete="name" required placeholder="Jane Smith" /></label><label><span>Work email</span><input name="email" type="email" autoComplete="email" required placeholder="jane@yourclinic.com" /></label><label><span>Phone</span><input name="phone" type="tel" inputMode="tel" autoComplete="tel" required placeholder="(403) 555-0123" /></label><label><span>Clinic</span><input name="clinic" autoComplete="organization" required placeholder="Your clinic" /></label><button type="submit">Request my full audit <b>→</b></button></form>
       <button className="rl-back" type="button" onClick={()=>setStep(1)}>Adjust my clinic numbers</button><small>No credit card. No patient data. A person reviews every request.</small>
     </div>}

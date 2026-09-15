@@ -39,6 +39,7 @@ export default function RevenueAudit() {
       `Eligible patient balances: $${patientBalances.toLocaleString()}`,
       `Name: ${form.get('name')}`,
       `Email: ${form.get('email')}`,
+      `Phone: ${form.get('phone')}`,
       `Clinic: ${form.get('clinic')}`,
       `Campaign source: ${campaign.get('utm_source') || 'Direct / not provided'}`,
       `Campaign: ${campaign.get('utm_campaign') || 'Not provided'}`,
@@ -66,7 +67,7 @@ export default function RevenueAudit() {
       <div className="rl-estimate"><span>Illustrative monthly revenue opportunity</span><output>{'$'}{estimate.toLocaleString()}</output><small>Planning estimate based on the assumptions shown below</small></div>
       <div className="rl-opportunity-grid">{opportunities.map(item => <article key={item.label}><span>{item.label}</span><strong>{'$'}{item.value.toLocaleString()}</strong><small>{item.note}</small></article>)}</div>
       <p className="rl-assumptions">Planning assumptions: 20% of missed calls, 15% of unbooked leads, 25% of cancellations, 8% of overdue recalls, 5% of unscheduled treatment, and 12% of eligible balances create a completed monthly opportunity. Your full audit replaces these assumptions with your baseline and practice rules.</p>
-      <form className="rl-contact-form" onSubmit={submit}><div><strong>Want the full clinic audit?</strong><small>We will review your baseline, capacity, insurance friction, PMS fit, and reporting requirements.</small></div><label><span>Name</span><input name="name" autoComplete="name" required placeholder="Jane Smith" /></label><label><span>Work email</span><input name="email" type="email" autoComplete="email" required placeholder="jane@yourclinic.com" /></label><label><span>Clinic</span><input name="clinic" autoComplete="organization" required placeholder="Your clinic" /></label><button type="submit">Request my full audit <b>→</b></button></form>
+      <form className="rl-contact-form" onSubmit={submit}><div><strong>Want the full clinic audit?</strong><small>We will review your baseline, capacity, insurance friction, PMS fit, and reporting requirements.</small></div><label><span>Name</span><input name="name" autoComplete="name" required placeholder="Jane Smith" /></label><label><span>Work email</span><input name="email" type="email" autoComplete="email" required placeholder="jane@yourclinic.com" /></label><label><span>Phone</span><input name="phone" type="tel" inputMode="tel" autoComplete="tel" required placeholder="(403) 555-0123" /></label><label><span>Clinic</span><input name="clinic" autoComplete="organization" required placeholder="Your clinic" /></label><button type="submit">Request my full audit <b>→</b></button></form>
       <button className="rl-back" type="button" onClick={()=>setStep(1)}>Adjust my clinic numbers</button><small>No credit card. No patient data. A person reviews every request.</small>
     </div>}
   </div>;

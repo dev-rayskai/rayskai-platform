@@ -6,10 +6,10 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "dev": "vinext dev",
-    "build": "vinext build",
+    "dev": "node api.js && vinext dev",
+    "build": "node api.js && vinext build",
     "vercel-build": "next build",
-    "start": "vinext start",
+    "start": "node api.js && vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {

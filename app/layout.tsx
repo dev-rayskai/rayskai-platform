@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://raysky.ai'),
+  icons: { icon: '/raysky-mark.png', apple: '/raysky-mark.png' },
   title: 'RaySky — Dental Revenue Operating System',
   description: 'Closed-loop dental AI that turns patient conversations into booked appointments, accepted treatment, and collected revenue.',
   openGraph: {
